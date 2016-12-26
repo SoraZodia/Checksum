@@ -1,2 +1,2 @@
 # Checksum
-Find the checksum for files
+Find and compare the checksum for files
