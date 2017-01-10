@@ -53,6 +53,8 @@ public class GUI extends JPanel implements ActionListener, FocusListener {
 		ButtonGroup group = new ButtonGroup();
 		for (int x = 0; x < list.length; x++) {
 			group.add(list[x]);
+			if (list[x] == md5)
+				list[x].setSelected(true);
 			list[x].setActionCommand(Hash.values()[x].toString());
 			list[x].addActionListener(this);
 
