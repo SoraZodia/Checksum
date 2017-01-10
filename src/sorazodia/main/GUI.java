@@ -94,36 +94,39 @@ public class GUI extends JPanel implements ActionListener, FocusListener {
 			break;
 		case "compute":
 			String checksum = "";
-			
+
 			fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 			int value = fc.showDialog(this, "OK");
-			
+
 			if (value == JFileChooser.APPROVE_OPTION)
-				checksum = HashGenerator.getHash(fc.getSelectedFile().getAbsolutePath(), hashType);
-			
-			if (!compare.getText().isEmpty() && checksum.compareTo(compare.getText()) == 0)
-				output.setBackground(Color.GREEN);
-			else if (!compare.getText().isEmpty() && checksum.compareTo(compare.getText()) != 0)
-				output.setBackground(Color.RED);
-			
+				checksum = HashGenerator.getHash(fc.getSelectedFile()
+						.getAbsolutePath(), hashType);
+
+			if (!compare.getText().isEmpty()) {
+				if (checksum.compareTo(compare.getText().trim()) == 0)
+					output.setBackground(Color.GREEN);
+				else
+					output.setBackground(Color.RED);
+			}
+
 			output.setText(checksum);
 			break;
 		}
 
 	}
-	
+
 	@Override
 	public void focusGained(FocusEvent e) {
 		if (output.isFocusOwner())
 			output.selectAll();
-		
+
 		if (compare.isFocusOwner())
 			compare.selectAll();
 	}
 
 	@Override
 	public void focusLost(FocusEvent e) {
-		
+
 	}
 
 	private enum Hash {
