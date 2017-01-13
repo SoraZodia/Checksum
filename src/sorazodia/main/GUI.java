@@ -12,6 +12,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
@@ -20,10 +21,13 @@ public class GUI extends JPanel implements ActionListener, FocusListener {
 
 	private static final long serialVersionUID = -8663347066048248839L;
 
-	private JButton hash = new JButton("Get Checksum");
+	private JButton hash = new JButton("Choose File");
 	private JTextField compare = new JTextField();
 	private JTextField output = new JTextField();
-
+	
+	private JLabel generatedHash = new JLabel("Generated Hash");
+	private JLabel expectedHash = new JLabel("Expected Hash");
+	
 	private JRadioButton md5 = new JRadioButton(Hash.MD5.toString());
 	private JRadioButton sha1 = new JRadioButton(Hash.SHA1.toString());
 	private JRadioButton sha224 = new JRadioButton(Hash.SHA224.toString());
@@ -39,13 +43,18 @@ public class GUI extends JPanel implements ActionListener, FocusListener {
 
 	public void draw() {
 		compare.setMaximumSize(new Dimension(compare.getMaximumSize().width, 25));
+		compare.setToolTipText("The generated hash will be compared to the hash placed, if any, in this field. To get a accurate result, please ensure that the correct hashing algorithm has been selected.");
 		output.setMaximumSize(new Dimension(output.getMaximumSize().width, 25));
+		output.setToolTipText("The hash generated will be shown here, if there's a hash-to-compare placed on the field adove this, \nthen it will turn green if it's a match and red otherwises.");
 		output.setBackground(Color.WHITE);
 		output.addFocusListener(this);
 		output.setEditable(false);
+		this.add(expectedHash);
 		this.add(compare);
+		this.add(generatedHash);
 		this.add(output);
 
+		hash.setToolTipText("The hash will be generated after an file is choosen");
 		hash.setActionCommand("compute");
 		hash.addActionListener(this);
 		this.add(hash);
@@ -62,8 +71,9 @@ public class GUI extends JPanel implements ActionListener, FocusListener {
 		}
 
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		this.setPreferredSize(new Dimension(600, 250));
+		this.setPreferredSize(new Dimension(600, 285));
 		frame = new JFrame("File Checksum");
+		frame.setMinimumSize(new Dimension(300, 285));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.add(this);
 		frame.pack();
@@ -96,12 +106,12 @@ public class GUI extends JPanel implements ActionListener, FocusListener {
 			String checksum = "";
 
 			fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-			int value = fc.showDialog(this, "OK");
-
+			int value = fc.showDialog(this, "Select");
+			
 			if (value == JFileChooser.APPROVE_OPTION)
 				checksum = HashGenerator.getHash(fc.getSelectedFile()
 						.getAbsolutePath(), hashType);
-
+			
 			if (!compare.getText().isEmpty()) {
 				if (checksum.compareTo(compare.getText().trim()) == 0)
 					output.setBackground(Color.GREEN);
